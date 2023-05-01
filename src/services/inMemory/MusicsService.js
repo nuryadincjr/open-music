@@ -1,4 +1,6 @@
 import { nanoid } from 'nanoid';
+import InvariantError from '../../exceptions/InvariantError.js';
+import NotFoundError from '../../exceptions/NotFoundError.js';
 
 class MusicsService {
   constructor() {
@@ -17,7 +19,7 @@ class MusicsService {
     const isSuccess = this._musics.filter((album) => album.id === id).length > 0;
 
     if (!isSuccess) {
-      throw new Error('Album gagal ditambahkan');
+      throw new InvariantError('Album gagal ditambahkan');
     }
 
     return id;
@@ -27,7 +29,7 @@ class MusicsService {
     const album = this._musics.filter((a) => a.id === id)[0];
 
     if (!album) {
-      throw new Error('Album tidak ditemukan');
+      throw new NotFoundError('Album tidak ditemukan');
     }
     return album;
   }
@@ -36,7 +38,7 @@ class MusicsService {
     const index = this._musics.findIndex((album) => album.id === id);
 
     if (index === -1) {
-      throw new Error('Gagal memperbarui album. Id tidak ditemukan');
+      throw new NotFoundError('Gagal memperbarui album. Id tidak ditemukan');
     }
 
     this._musics[index] = {
@@ -49,7 +51,7 @@ class MusicsService {
   deleteAlbumById(id) {
     const index = this._musics.findIndex((album) => album.id === id);
     if (index === -1) {
-      throw new Error('Album gagal dihapus. Id tidak ditemukan');
+      throw new NotFoundError('Album gagal dihapus. Id tidak ditemukan');
     }
     this._musics.splice(index, 1);
   }
@@ -75,7 +77,7 @@ class MusicsService {
     const isSuccess = this._musics.filter((song) => song.id === id).length > 0;
 
     if (!isSuccess) {
-      throw new Error('Song gagal ditambahkan');
+      throw new InvariantError('Song gagal ditambahkan');
     }
 
     return id;
@@ -89,7 +91,7 @@ class MusicsService {
     const song = this._musics.filter((s) => s.id === id)[0];
 
     if (!song) {
-      throw new Error('Song tidak ditemukan');
+      throw new NotFoundError('Song tidak ditemukan');
     }
     return song;
   }
@@ -100,7 +102,7 @@ class MusicsService {
     const index = this._musics.findIndex((song) => song.id === id);
 
     if (index === -1) {
-      throw new Error('Gagal memperbarui song. Id tidak ditemukan');
+      throw new NotFoundError('Gagal memperbarui song. Id tidak ditemukan');
     }
 
     this._musics[index] = {
@@ -117,7 +119,7 @@ class MusicsService {
   deleteSongById(id) {
     const index = this._musics.findIndex((song) => song.id === id);
     if (index === -1) {
-      throw new Error('Song gagal dihapus. Id tidak ditemukan');
+      throw new NotFoundError('Song gagal dihapus. Id tidak ditemukan');
     }
     this._musics.splice(index, 1);
   }
