@@ -1,10 +1,10 @@
 import { nanoid } from 'nanoid';
- 
+
 class MusicsService {
   constructor() {
     this._musics = [];
   }
- 
+
   addAlbum({ name, year }) {
     const id = nanoid(16);
 
@@ -14,12 +14,12 @@ class MusicsService {
 
     this._musics.push(newAlbum);
 
-    const isSuccess = this._musics.filter((album) => album.id === id).length > 0; 
-  
+    const isSuccess = this._musics.filter((album) => album.id === id).length > 0;
+
     if (!isSuccess) {
       throw new Error('Album gagal ditambahkan');
     }
- 
+
     return id;
   }
 
@@ -34,11 +34,11 @@ class MusicsService {
 
   editAlbumById(id, { name, year }) {
     const index = this._musics.findIndex((album) => album.id === id);
- 
+
     if (index === -1) {
       throw new Error('Gagal memperbarui album. Id tidak ditemukan');
     }
- 
+
     this._musics[index] = {
       ...this._musics[index],
       name,
@@ -54,30 +54,30 @@ class MusicsService {
     this._musics.splice(index, 1);
   }
 
-// Song
-addSong({ title, year, genre, performer, duration, albumId }) {
-  const id = nanoid(16);
+  // Song
+  addSong({
+    title, year, genre, performer, duration, albumId,
+  }) {
+    const id = nanoid(16);
 
-  const newSongs = {
-    id,
-    title,
-    year,
-    performer,
-    genre,
-    duration,
-    albumId,
-  };
+    const newSongs = {
+      id,
+      title,
+      year,
+      performer,
+      genre,
+      duration,
+      albumId,
+    };
 
-  musics.push(songs);
+    this._musics.push(newSongs);
 
-  this._musics.push(newSongs);
+    const isSuccess = this._musics.filter((song) => song.id === id).length > 0;
 
-  const isSuccess = this._musics.filter((song) => song.id === id).length > 0; 
- 
-  if (!isSuccess) {
-    throw new Error('Song gagal ditambahkan');
-  }
- 
+    if (!isSuccess) {
+      throw new Error('Song gagal ditambahkan');
+    }
+
     return id;
   }
 
@@ -94,13 +94,15 @@ addSong({ title, year, genre, performer, duration, albumId }) {
     return song;
   }
 
-  editSongById(id, { title, year, genre, performer, duration, albumId }) {
+  editSongById(id, {
+    title, year, genre, performer, duration, albumId,
+  }) {
     const index = this._musics.findIndex((song) => song.id === id);
- 
+
     if (index === -1) {
       throw new Error('Gagal memperbarui song. Id tidak ditemukan');
     }
- 
+
     this._musics[index] = {
       ...this._musics[index],
       title,
