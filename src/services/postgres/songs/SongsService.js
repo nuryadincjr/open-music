@@ -65,13 +65,29 @@ class SongsService {
     };
     const result = await this._pool.query(query);
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Song tidak ditemukan');
     }
-    return result.rows.map(mapDBToModel)[0];
+    return mapDBToModel(result.rows[0]);
   }
 
-  async editSongById(id, { title, year, genre, performer, duration, albumId }) {
+  async getSongsByAlbumId(albumId) {
+    const query = {
+      text: 'SELECT id, title, performer FROM songs WHERE album_id = $1',
+      values: [albumId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError('Album tidak ditemukan');
+    }
+    return result.rows;
+  }
+
+  async editSongById(id, {
+    title, year, genre, performer, duration, albumId,
+  }) {
     const query = {
       text: 'UPDATE songs SET title = $1, year = $2, genre = $3, performer = $4, duration = $5, album_id = $6 WHERE id = $7 RETURNING id',
       values: [title, year, genre, performer, duration, albumId, id],
@@ -79,7 +95,7 @@ class SongsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Gagal memperbarui song. Id tidak ditemukan');
     }
   }
@@ -92,7 +108,7 @@ class SongsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rows.length) { throw new NotFoundError('Song gagal dihapus. Id tidak ditemukan'); }
+    if (!result.rowCount) { throw new NotFoundError('Song gagal dihapus. Id tidak ditemukan'); }
   }
 }
 
