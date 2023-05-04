@@ -1,10 +1,5 @@
 import Joi from 'joi';
 
-const AlbumPayloadSchema = Joi.object({
-  name: Joi.string().required(),
-  year: Joi.number().required(),
-});
-
 const SongPayloadSchema = Joi.object({
   title: Joi.string().required(),
   year: Joi.number().required(),
@@ -14,4 +9,4 @@ const SongPayloadSchema = Joi.object({
   albumId: Joi.string().allow(null, ''),
 });
 
-export { AlbumPayloadSchema, SongPayloadSchema };
+export { SongPayloadSchema };

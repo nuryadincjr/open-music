@@ -1,14 +1,24 @@
 import { server as _server } from '@hapi/hapi';
-import musics from './api/musics/index.js';
-import MusicsService from './services/inMemory/MusicsService.js';
-import MusicValidator from './validator/musics/index.js';
+import dotenv from 'dotenv';
+import ClientError from './exceptions/ClientError.js';
+
+import albums from './api/albums/index.js';
+import AlbumsService from './services/postgres/albums/AlbumsService.js';
+import AlbumValidator from './validator/albums/index.js';
+
+import songs from './api/songs/index.js';
+import SongsService from './services/postgres/songs/SongsService.js';
+import SongValidator from './validator/songs/index.js';
+
+dotenv.config();
 
 const init = async () => {
-  const musicsService = new MusicsService();
+  const albumsService = new AlbumsService();
+  const songsService = new SongsService();
 
   const server = _server({
-    port: 9000,
-    host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
+    port: process.env.PORT,
+    host: process.env.HOST,
     routes: {
       cors: {
         origin: ['*'],
@@ -16,12 +26,49 @@ const init = async () => {
     },
   });
 
-  await server.register({
-    plugin: musics,
-    options: {
-      service: musicsService,
-      validator: MusicValidator,
+  await server.register([
+    {
+      plugin: albums,
+      options: {
+        service: albumsService,
+        validator: AlbumValidator,
+      },
     },
+    {
+      plugin: songs,
+      options: {
+        service: songsService,
+        validator: SongValidator,
+      },
+    },
+  ]);
+
+  server.ext('onPreResponse', (request, h) => {
+    const { response } = request;
+
+    if (response instanceof Error) {
+      if (response instanceof ClientError) {
+        const newResponse = h.response({
+          status: 'fail',
+          message: response.message,
+        });
+        newResponse.code(response.statusCode);
+        return newResponse;
+      }
+
+      if (!response.isServer) {
+        return h.continue;
+      }
+
+      const newResponse = h.response({
+        status: 'error',
+        message: 'terjadi kegagalan pada server kami',
+      });
+      newResponse.code(500);
+      return newResponse;
+    }
+
+    return h.continue;
   });
 
   await server.start();
