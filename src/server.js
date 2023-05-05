@@ -3,18 +3,23 @@ import dotenv from 'dotenv';
 import ClientError from './exceptions/ClientError.js';
 
 import albums from './api/albums/index.js';
-import AlbumsService from './services/postgres/albums/AlbumsService.js';
+import AlbumsService from './services/postgres/AlbumsService.js';
 import AlbumValidator from './validator/albums/index.js';
 
 import songs from './api/songs/index.js';
-import SongsService from './services/postgres/songs/SongsService.js';
+import SongsService from './services/postgres/SongsService.js';
 import SongValidator from './validator/songs/index.js';
+
+import users from './api/users/index.js';
+import UsersService from './services/postgres/UsersService.js';
+import UserValidator from './validator/users/index.js';
 
 dotenv.config();
 
 const init = async () => {
   const albumsService = new AlbumsService();
   const songsService = new SongsService();
+  const usersService = new UsersService();
 
   const server = _server({
     port: process.env.PORT,
@@ -40,6 +45,13 @@ const init = async () => {
       options: {
         service: songsService,
         validator: SongValidator,
+      },
+    },
+    {
+      plugin: users,
+      options: {
+        service: usersService,
+        validator: UserValidator,
       },
     },
   ]);
