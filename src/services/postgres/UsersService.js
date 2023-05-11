@@ -64,7 +64,7 @@ class UsersService {
     };
     const result = await this._pool.query(query);
 
-    if (result.rowCount > 0) {
+    if (!result.rowCount > 0) {
       throw new AuthenticationError('Kredensial yang Anda berikan salah');
     }
 
@@ -77,6 +77,19 @@ class UsersService {
     }
 
     return id;
+  }
+
+  async verifyUserExist(userId) {
+    const query = {
+      text: 'SELECT * FROM users WHERE id = $1',
+      values: [userId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('User tidak ditemukan');
+    }
   }
 }
 
