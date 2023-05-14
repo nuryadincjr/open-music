@@ -17,6 +17,8 @@
             {
               "js": "always"
             }
-          ]
+          ],
+          "no-underscore-dangle": "off",
+          "no-console": "off"
     }
 }

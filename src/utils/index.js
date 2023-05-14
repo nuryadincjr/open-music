@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const mapDBToModel = ({
   id,
   title,
@@ -16,4 +17,4 @@ const mapDBToModel = ({
   albumId: album_id,
 });
 
-export { mapDBToModel };
+export default mapDBToModel;

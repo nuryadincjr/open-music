@@ -1,4 +1,4 @@
-import { UserPayloadSchema } from './schema.js';
+import UserPayloadSchema from './schema.js';
 import InvariantError from '../../exceptions/InvariantError.js';
 
 const UserValidator = {

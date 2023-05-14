@@ -29,7 +29,7 @@ class PlaylistsService {
     return result.rows[0].id;
   }
 
-  async addSongToPlaylist({playlistId, songId }) {
+  async addSongToPlaylist({ playlistId, songId }) {
     const id = `playlist-song-${nanoid(16)}`;
     const query = {
       text: 'INSERT INTO playlist_songs VALUES($1, $2, $3) RETURNING id',

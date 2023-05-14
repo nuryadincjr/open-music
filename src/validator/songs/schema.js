@@ -9,4 +9,4 @@ const SongPayloadSchema = Joi.object({
   albumId: Joi.string().allow(null, ''),
 });
 
-export { SongPayloadSchema };
+export default SongPayloadSchema;

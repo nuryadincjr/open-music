@@ -1,5 +1,7 @@
 class CollaborationsHandler {
-  constructor(service, usersService, playlistsService, validator) {
+  constructor({
+    service, usersService, playlistsService, validator,
+  }) {
     this._service = service;
     this._usersService = usersService;
     this._playlistsService = playlistsService;

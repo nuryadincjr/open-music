@@ -6,4 +6,4 @@ const UserPayloadSchema = Joi.object({
   fullname: Joi.string().required(),
 });
 
-export { UserPayloadSchema };
+export default UserPayloadSchema;

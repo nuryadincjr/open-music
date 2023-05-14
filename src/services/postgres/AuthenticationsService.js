@@ -13,7 +13,7 @@ class AuthenticationsService {
       text: 'INSERT INTO authentications VALUES($1)',
       values: [token],
     };
- 
+
     await this._pool.query(query);
   }
 
@@ -22,7 +22,7 @@ class AuthenticationsService {
       text: 'SELECT token FROM authentications WHERE token = $1',
       values: [token],
     };
- 
+
     const result = await this._pool.query(query);
 
     if (!result.rowCount) {
