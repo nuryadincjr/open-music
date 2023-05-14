@@ -10,7 +10,7 @@ class CollaborationsService {
     this._pool = new Pool();
   }
 
-  async addCollaboration({ playlistId, userId }) {
+  async addCollaboration(playlistId, userId) {
     const id = `collab-${nanoid(16)}`;
 
     const query = {
@@ -23,11 +23,10 @@ class CollaborationsService {
       throw new InvariantError('Collaboration gagal ditambahkan');
     }
 
-    // return result.rows[0].id;
-    return result.rows[0];
+    return result.rows[0].id;
   }
 
-  async deleteCollaboration({ playlistId, userId }) {
+  async deleteCollaboration(playlistId, userId) {
     const query = {
       text: 'DELETE FROM collaborations WHERE playlist_id = $1 AND user_id = $2 RETURNING id',
       values: [playlistId, userId],

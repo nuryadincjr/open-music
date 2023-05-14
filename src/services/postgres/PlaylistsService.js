@@ -29,7 +29,7 @@ class PlaylistsService {
     return result.rows[0].id;
   }
 
-  async addSongToPlaylist({ id: playlistId, songId }) {
+  async addSongToPlaylist({playlistId, songId }) {
     const id = `playlist-song-${nanoid(16)}`;
     const query = {
       text: 'INSERT INTO playlist_songs VALUES($1, $2, $3) RETURNING id',
@@ -88,6 +88,24 @@ class PlaylistsService {
     return result.rows[0];
   }
 
+  async getPlaylistActivities(playlistId) {
+    const query = {
+      text: `SELECT users.username, songs.title, playlist_song_activities.action, playlist_song_activities.time
+      FROM playlist_song_activities
+      JOIN songs ON playlist_song_activities.song_id = songs.id
+      JOIN users ON playlist_song_activities.user_id = users.id
+      WHERE playlist_song_activities.playlist_id = $1`,
+      values: [playlistId],
+    };
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError('Playlist tidak ditemukan');
+    }
+
+    return result.rows;
+  }
+
   async getSongsInPlaylist(id) {
     const query = {
       text: `SELECT songs.id, songs.title, songs.performer
@@ -135,7 +153,7 @@ class PlaylistsService {
     const result = await this._pool.query(query);
 
     if (!result.rowCount) {
-      throw new NotFoundError('Playlist tidak ditemukan');
+      throw new NotFoundError('Playlist tidak ditemukanss');
     }
     const playlist = result.rows[0];
 

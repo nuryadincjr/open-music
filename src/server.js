@@ -19,15 +19,15 @@ import UserValidator from './validator/users/index.js';
 import authentications from './api/authentications/index.js';
 import AuthenticationsService from './services/postgres/AuthenticationsService.js';
 import TokenManager from './tokenize/TokenManager.js';
-import AuthenticationsValidator from './validator/authentications/index.js';
+import AuthenticationValidator from './validator/authentications/index.js';
 
 import collaborations from './api/collaborations/index.js';
 import CollaborationsService from './services/postgres/CollaborationsService.js';
-import CollaborationsValidator from './validator/collaborations/index.js';
+import CollaborationValidator from './validator/collaborations/index.js';
 
 import playlists from './api/playlists/index.js';
 import PlaylistsService from './services/postgres/PlaylistsService.js';
-import PlaylistsValidator from './validator/playlists/index.js';
+import PlaylistValidator from './validator/playlists/index.js';
 
 dotenv.config();
 
@@ -70,7 +70,7 @@ const init = async () => {
       },
     }),
   });
-  
+
   await server.register([
     {
       plugin: albums,
@@ -100,24 +100,24 @@ const init = async () => {
         authenticationsService,
         usersService,
         tokenManager: TokenManager,
-        validator: AuthenticationsValidator,
+        validator: AuthenticationValidator,
       },
     },
     {
       plugin: collaborations,
       options: {
-        collaborationsService,
-        playlistsService,
+        service: collaborationsService,
         usersService,
-        validator: CollaborationsValidator,
+        playlistsService,
+        validator: CollaborationValidator,
       },
     },
     {
       plugin: playlists,
       options: {
-        service: playlistsService,
+        playlistsService,
         songsService,
-        validator: PlaylistsValidator,
+        validator: PlaylistValidator,
       },
     },
   ]);

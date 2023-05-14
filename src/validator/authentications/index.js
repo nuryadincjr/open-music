@@ -5,7 +5,7 @@ import {
 } from './schema.js';
 import InvariantError from '../../exceptions/InvariantError.js';
 
-const AuthenticationsValidator = {
+const AuthenticationValidator = {
   validatePostAuthenticationPayload: (payload) => {
     const validationResult = PostAuthenticationPayloadSchema.validate(payload);
     if (validationResult.error) {
@@ -26,4 +26,4 @@ const AuthenticationsValidator = {
   },
 };
 
-export default AuthenticationsValidator;
+export default AuthenticationValidator;
