@@ -11,14 +11,8 @@
         "ecmaVersion": "latest"
     },
     "rules": {
-        "import/extensions": [
-            "error",
-            "ignorePackages",
-            {
-              "js": "always"
-            }
-          ],
-          "no-underscore-dangle": "off",
-          "no-console": "off"
+        "import/extensions": ["error","ignorePackages",{"js": "always"}],
+        "no-underscore-dangle": "off",
+        "no-console": "off"
     }
 }

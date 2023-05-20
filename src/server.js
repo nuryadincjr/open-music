@@ -1,7 +1,10 @@
 import { server as _server } from '@hapi/hapi';
 import Jwt from '@hapi/jwt';
+import Inert from '@hapi/inert';
 
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { resolve, dirname } from 'path';
 import ClientError from './exceptions/ClientError.js';
 
 import albums from './api/albums/index.js';
@@ -29,6 +32,14 @@ import playlists from './api/playlists/index.js';
 import PlaylistsService from './services/postgres/PlaylistsService.js';
 import PlaylistValidator from './validator/playlists/index.js';
 
+import _exports from './api/exports/index.js';
+import ProducerService from './services/rabbitmq/ProducerService.js';
+import ExportsValidator from './validator/exports/index.js';
+
+import covers from './api/covers/index.js';
+import StorageService from './services/storage/StorageService.js';
+import CoversValidator from './validator/covers/index.js';
+
 dotenv.config();
 
 const init = async () => {
@@ -38,6 +49,10 @@ const init = async () => {
   const authenticationsService = new AuthenticationsService();
   const collaborationsService = new CollaborationsService();
   const playlistsService = new PlaylistsService(collaborationsService);
+
+  const currentFilePath = fileURLToPath(import.meta.url);
+  const currentDir = dirname(currentFilePath);
+  const storageService = new StorageService(resolve(currentDir, 'api/covers/file/images'));
 
   const server = _server({
     port: process.env.PORT,
@@ -52,6 +67,9 @@ const init = async () => {
   await server.register([
     {
       plugin: Jwt,
+    },
+    {
+      plugin: Inert,
     },
   ]);
 
@@ -118,6 +136,22 @@ const init = async () => {
         playlistsService,
         songsService,
         validator: PlaylistValidator,
+      },
+    },
+    {
+      plugin: _exports,
+      options: {
+        service: ProducerService,
+        playlistsService,
+        validator: ExportsValidator,
+      },
+    },
+    {
+      plugin: covers,
+      options: {
+        storageService,
+        albumsService,
+        validator: CoversValidator,
       },
     },
   ]);
