@@ -40,6 +40,11 @@ import covers from './api/covers/index.js';
 import StorageService from './services/storage/StorageService.js';
 import CoversValidator from './validator/covers/index.js';
 
+import albumLikes from './api/albumLikes/index.js';
+import AlbumLikesService from './services/postgres/AlbumLikesService.js';
+
+import CacheService from './services/redis/CacheService.js';
+
 dotenv.config();
 
 const init = async () => {
@@ -53,6 +58,9 @@ const init = async () => {
   const currentFilePath = fileURLToPath(import.meta.url);
   const currentDir = dirname(currentFilePath);
   const storageService = new StorageService(resolve(currentDir, 'api/covers/file/images'));
+
+  const cacheService = new CacheService();
+  const albumLikesService = new AlbumLikesService(cacheService);
 
   const server = _server({
     port: process.env.PORT,
@@ -154,6 +162,13 @@ const init = async () => {
         validator: CoversValidator,
       },
     },
+    {
+      plugin: albumLikes,
+      options: {
+        albumLikesService,
+        albumsService,
+      },
+    },
   ]);
 
   server.ext('onPreResponse', (request, h) => {
@@ -185,7 +200,6 @@ const init = async () => {
   });
 
   await server.start();
-  // eslint-disable-next-line no-console
   console.log(`Server berjalan pada ${server.info.uri}`);
 };
 
