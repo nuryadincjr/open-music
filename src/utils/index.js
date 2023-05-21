@@ -17,4 +17,16 @@ const mapDBToModel = ({
   albumId: album_id,
 });
 
-export default mapDBToModel;
+const mapDBToModelAlbum = ({
+  id,
+  name,
+  year,
+  cover_url,
+}) => ({
+  id,
+  name,
+  year,
+  coverUrl: cover_url,
+});
+
+export { mapDBToModel, mapDBToModelAlbum };

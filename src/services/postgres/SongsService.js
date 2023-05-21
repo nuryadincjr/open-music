@@ -2,7 +2,7 @@ import pkg from 'pg';
 import { nanoid } from 'nanoid';
 import InvariantError from '../../exceptions/InvariantError.js';
 import NotFoundError from '../../exceptions/NotFoundError.js';
-import mapDBToModel from '../../utils/index.js';
+import { mapDBToModel } from '../../utils/index.js';
 
 const { Pool } = pkg;
 
